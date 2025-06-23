@@ -1,0 +1,122 @@
+<!-- taxindex.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>TaxTime – Smart Tax Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="taxstyle.css" />
+</head>
+
+<body class="bg-white text-gray-900 font-sans">
+
+  <!-- NAVBAR -->
+  <header class="fixed w-full top-0 z-50 bg-white shadow-sm">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold">TaxTime</h1>
+      <nav class="space-x-6 hidden md:block">
+        <a href="#features" class="hover:text-blue-600">Features</a>
+        <a href="#how" class="hover:text-blue-600">How It Works</a>
+        <a href="#cta" class="hover:text-blue-600">Get Started</a>
+      </nav>
+      <a href="#cta" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Get Started</a>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="pt-32 pb-24 bg-gradient-to-b from-white to-blue-50 text-center">
+    <div class="container mx-auto px-6" data-aos="fade-up">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4">Your AI-Powered Tax Assistant</h2>
+      <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+        Get tax summaries, fill forms, and download reports — instantly and stress-free.
+      </p>
+      <a href="#cta" class="inline-block px-6 py-3 bg-blue-600 text-white rounded-full text-lg hover:bg-blue-700">
+        Try TaxTime Now
+      </a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-24 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h3 class="text-3xl font-bold mb-4">What TaxTime Does for You</h3>
+        <p class="text-gray-600 max-w-2xl mx-auto">No jargon. Just smart tax help, built for real people.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2"> Income Parsing</h4>
+          <p>Natural language income entry using spaCy and regex parsing.</p>
+        </div>
+        <div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2"> Tax Calculation</h4>
+          <p>Applies Indian tax rules, deductions, and rebates automatically.</p>
+        </div>
+        <div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2">Tax Summary PDF Generator</h4>
+          <p>Provides you with Tax Summarries without any extra hassle.</p>
+        </div>
+		<div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2">Mock ITR Filler</h4>
+          <p>Gives you a mock simulation of ITR Form</p>
+        </div>
+		<div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2">Error and Missing Data Detector</h4>
+          <p>Detects any errors or missing datas hassle free.</p>
+        </div>
+		<div data-aos="fade-up" class="p-6 border rounded-lg shadow hover:shadow-md transition">
+          <h4 class="font-bold text-xl mb-2">Downloader</h4>
+          <p>Export tax summaries,reports, ITR mock sheets, and reminders with one click</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-24 bg-blue-50">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h3 class="text-3xl font-bold mb-4">How It Works</h3>
+        <p class="text-gray-600 max-w-xl mx-auto">Three steps. That’s it.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-10 text-center">
+        <div data-aos="zoom-in" class="p-6">
+          <h4 class="text-xl font-bold mb-2">1. Enter Income</h4>
+          <p>Describe your income & deductions in plain English.</p>
+        </div>
+        <div data-aos="zoom-in" class="p-6">
+          <h4 class="text-xl font-bold mb-2">2. Get Tax Summary</h4>
+          <p>Instantly see tax payable, rebates, and savings suggestions.</p>
+        </div>
+        <div data-aos="zoom-in" class="p-6">
+          <h4 class="text-xl font-bold mb-2">3. Download Reports</h4>
+          <p>PDF summaries, mock ITRs & reminders — all in your dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" class="py-24 bg-white text-center">
+    <div class="container mx-auto px-6" data-aos="fade-up">
+      <h3 class="text-3xl md:text-4xl font-bold mb-4">Start Filing Smarter with TaxTime</h3>
+      <p class="text-gray-600 mb-6 max-w-xl mx-auto">No installations. No fees. Just powerful tax automation.</p>
+      <a href="/taxindex" class="bg-blue-600 text-white px-8 py-3 rounded-full text-lg hover:bg-blue-700">
+        Launch TaxTime Now
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-10 bg-gray-100 text-center text-sm text-gray-500">
+    © 2025 TaxTime. All rights reserved.
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>AOS.init();</script>
+  <script src="taxjs.js"></script>
+</body>
+</html>
