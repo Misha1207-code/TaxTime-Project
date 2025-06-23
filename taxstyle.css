@@ -1,4 +1,119 @@
-/* taxstyle.css */
+/* Fonts */
+@font-face {
+  font-family: "Pattanakarn Condensed";
+  src: url("/static/fonts/Pattanakarn-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Pattanakarn Condensed";
+  src: url("/static/fonts/PattanakarnCondensed-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Base Styles */
+body {
+  font-family: "Pattanakarn Condensed", sans-serif;
+  animation: fadeIn 0.5s ease-out;
+}
+
 html {
   scroll-behavior: smooth;
+}
+
+/* Hero Section */
+.hero-animated-bg {
+  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533d7b);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.floating-btn {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3);
+}
+
+/* Wave Divider */
+.wave-divider {
+  width: 100%;
+  height: 80px;
+  margin-top: -1px;
+  color: #f8fafc;
+}
+
+.wave-divider svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Ripple Effect */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scroll Navbar */
+header.scrolled {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-animated-bg {
+    padding-top: 24rem;
+    padding-bottom: 12rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
