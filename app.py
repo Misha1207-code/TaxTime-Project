@@ -13,14 +13,14 @@ api_key = os.getenv('OMNIDIM_API_KEY')
 
 # Initialize client
 client = Client(api_key)
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = 'your_very_secret_key_12345'  # Change this for production
 
 @app.route("/")
 def homepage():
     if 'has_loaded' not in session:
         return redirect(url_for('loading_page'))
-    return render_template("index.html")
+    return render_template("taxindex.html")
 
 @app.route("/loading")
 def loading_page():
@@ -29,7 +29,7 @@ def loading_page():
 
 @app.route("/main")
 def main_page():
-    return render_template("index.html")
+    return render_template("taxindex.html")
 
 @app.route("/clear-session", methods=['POST'])
 def clear_session():
