@@ -1,62 +1,104 @@
-document.getElementById("taxForm").addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const input = document.getElementById("incomeText").value;
-    const resultBox = document.getElementById("result");
+import re
+import json
+from fpdf import FPDF
 
-    // Show loading state
-    resultBox.innerHTML = `
-        <div class="flex items-center justify-center space-x-3 py-6">
-            <div class="loading-spinner rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
-            <span class="text-gray-700">Calculating your tax summary...</span>
-        </div>
-    `;
-
-    try {
-        const res = await fetch("/api/tax-summary", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: input })
-        });
-
-        if (!res.ok) throw new Error(await res.text());
-        
-        const data = await res.json();
-        
-        // Format results with Indian number formatting
-        const formatINR = (num) => new Intl.NumberFormat('en-IN').format(num);
-        
-        resultBox.innerHTML = `
-            <div class="space-y-4">
-                <div class="result-item">
-                    <span class="result-label">Total Income:</span>
-                    <span class="result-value">₹${formatINR(data.total_income)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Total Deductions:</span>
-                    <span class="result-value">₹${formatINR(data.total_deductions)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Taxable Income:</span>
-                    <span class="result-value">₹${formatINR(data.taxable_income)}</span>
-                </div>
-                <div class="result-item">
-                    <span class="result-label">Tax Payable:</span>
-                    <span class="result-value tax-payable">₹${formatINR(data.tax_payable)}</span>
-                </div>
-                <div class="pt-4">
-                    <a href="${data.pdf}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
-                        <i class="fas fa-file-pdf mr-2"></i> Download PDF Summary
-                    </a>
-                </div>
-            </div>
-        `;
-    } catch (error) {
-        console.error("Error:", error);
-        resultBox.innerHTML = `
-            <div class="bg-red-50 text-red-600 p-4 rounded-lg">
-                <i class="fas fa-exclamation-circle mr-2"></i>
-                Error generating summary: ${error.message}
-            </div>
-        `;
+def parse_income_input(text):
+    text = text.lower().replace(",", "").strip()
+    
+    result = {
+        "salary_income": 0,
+        "other_income": 0,
+        "deductions": 0,
+        "donation": 0
     }
-});
+
+    # Match income patterns
+    income_patterns = [
+        (r'(?:earned|income|salary|made)\s*(?:₹|rs\.?)?\s*(\d+\.?\d*)\s*(lakh|lac|thousand|k|)', 'salary'),
+        (r'(?:freelance|business)\s*(?:income|earnings)?\s*(?:₹|rs\.?)?\s*(\d+\.?\d*)\s*(lakh|lac|thousand|k|)', 'other'),
+        (r'(?:donat|giv|contribut)\s*(?:₹|rs\.?)?\s*(\d+\.?\d*)', 'donation')
+    ]
+    
+    for pattern, income_type in income_patterns:
+        matches = re.finditer(pattern, text)
+        for match in matches:
+            amount = float(match.group(1))
+            if len(match.groups()) > 1 and match.group(2):
+                unit = match.group(2)
+                if unit in ['lakh', 'lac']:
+                    amount *= 100000
+                elif unit in ['thousand', 'k']:
+                    amount *= 1000
+            
+            if income_type == 'salary':
+                result["salary_income"] += amount
+            elif income_type == 'other':
+                result["other_income"] += amount
+            else:
+                result["donation"] += amount
+
+    # Match expense/deduction patterns
+    spend_match = re.search(r'(?:spent|spend|expense|deduct|invest)\s*(?:₹|rs\.?)?\s*(\d+\.?\d*)', text)
+    if spend_match:
+        result["deductions"] = int(float(spend_match.group(1)))
+
+    return result
+
+def load_tax_rules(filepath="tax_rules.json"):
+    with open(filepath, "r") as f:
+        return json.load(f)
+
+def apply_deductions(income, deductions, rules):
+    std_deduction = rules.get("standard_deduction", 50000)
+    taxable_income = max(income - std_deduction, 0)
+    total_deduction = std_deduction
+    
+    # Apply section-wise deductions
+    for section, limit in rules["deductions"].items():
+        if section in deductions:
+            deductible = min(deductions[section], limit)
+            taxable_income = max(taxable_income - deductible, 0)
+            total_deduction += deductible
+    
+    return taxable_income, total_deduction
+
+def calculate_tax(taxable_income, rules):
+    slabs = rules["slabs_old"]
+    tax = 0
+    prev_limit = 0
+    
+    for slab in slabs:
+        limit = slab["limit"]
+        rate = slab["rate"]
+        if taxable_income > limit:
+            tax += (limit - prev_limit) * rate
+            prev_limit = limit
+        else:
+            tax += (taxable_income - prev_limit) * rate
+            break
+    
+    cess = tax * rules.get("cess_rate", 0.04)  # 4% cess
+    return int(tax + cess)
+
+def generate_tax_summary_pdf(filename, total_income, total_deductions, taxable_income, tax_payable):
+    pdf = FPDF()
+    pdf.add_page()
+    
+    # Header
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, "TaxTime - Tax Summary Report", ln=True, align='C')
+    pdf.ln(10)
+    
+    # Content
+    pdf.set_font("Arial", size=12)
+    pdf.cell(0, 10, f"Total Income: Rs. {total_income:,}", ln=True)
+    pdf.cell(0, 10, f"Total Deductions: Rs. {total_deductions:,}", ln=True)
+    pdf.cell(0, 10, f"Taxable Income: Rs. {taxable_income:,}", ln=True)
+    pdf.cell(0, 10, f"Income Tax Payable: Rs. {tax_payable:,}", ln=True)
+    
+    # Footer
+    pdf.ln(20)
+    pdf.set_font("Arial", 'I', 10)
+    pdf.cell(0, 10, "Generated by TaxTime - AI Tax Assistant", ln=True, align='C')
+    
+    pdf.output(filename)
