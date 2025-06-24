@@ -41,29 +41,35 @@
   <div class="text-center">
     <h1 class="text-5xl md:text-6xl font-bold mb-6 gradient-text">Hi, Welcome to TaxTime</h1>
     <p class="text-xl text-gray-300 mb-8 animate-pulse">Preparing your tax assistant...</p>
+    
     <div class="flex justify-center space-x-4 mb-12">
       <div class="w-12 h-12 bg-blue-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite"></div>
       <div class="w-8 h-8 bg-green-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite 0.5s"></div>
       <div class="w-10 h-10 bg-purple-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite 1s"></div>
     </div>
+    
     <div class="w-full max-w-md mx-auto h-2.5 bg-gray-700 rounded-full">
       <div id="progressBar" class="h-2.5 rounded-full" style="width: 0%"></div>
     </div>
+    
     <p id="countdown" class="mt-4 text-gray-400">Loading in 15 seconds...</p>
   </div>
 
   <script>
+    // Progress bar animation
     let timeLeft = 15;
     const progressBar = document.getElementById('progressBar');
     const countdown = document.getElementById('countdown');
+    
     const timer = setInterval(() => {
       timeLeft--;
       const progress = 100 - (timeLeft / 15 * 100);
-      progressBar.style.width = `${progress}%`;
-      countdown.textContent = `Loading in ${timeLeft} seconds...`;
+      progressBar.style.width = ${progress}%;
+      countdown.textContent = Loading in ${timeLeft} seconds...;
+      
       if (timeLeft <= 0) {
         clearInterval(timer);
-        window.location.href = "index.html";  // 🔁 updated link here
+        window.location.href = "/main"; // Redirect to main page
       }
     }, 1000);
   </script>
