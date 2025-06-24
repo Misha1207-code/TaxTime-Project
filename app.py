@@ -1,11 +1,40 @@
-from flask import Flask, request, jsonify, send_file, render_template
+from flask import Flask, render_template, request, jsonify, send_file, session, redirect, url_for
 from tax_backend import parse_income_input, load_tax_rules, apply_deductions, calculate_tax, generate_tax_summary_pdf
+import time
+import os
+from dotenv import load_dotenv
+from omnidimension import Client
 
+# Load the .env file
+load_dotenv()
+
+# Get the API key from the .env
+api_key = os.getenv('OMNIDIM_API_KEY')
+
+# Initialize client
+client = Client(api_key)
 app = Flask(__name__, static_folder="static", template_folder="templates")
+app.secret_key = 'your_very_secret_key_12345'  # Change this for production
 
 @app.route("/")
 def homepage():
+    if 'has_loaded' not in session:
+        return redirect(url_for('loading_page'))
     return render_template("taxindex.html")
+
+@app.route("/loading")
+def loading_page():
+    session['has_loaded'] = True
+    return render_template("loading.html")
+
+@app.route("/main")
+def main_page():
+    return render_template("taxindex.html")
+
+@app.route("/clear-session", methods=['POST'])
+def clear_session():
+    session.pop('has_loaded', None)
+    return '', 204
 
 @app.route("/api/tax-summary", methods=["POST"])
 def tax_summary():
