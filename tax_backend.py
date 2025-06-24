@@ -1,146 +1,62 @@
-import re
-import json
-from fpdf import FPDF
+document.getElementById("taxForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const input = document.getElementById("incomeText").value;
+    const resultBox = document.getElementById("result");
 
+    // Show loading state
+    resultBox.innerHTML = `
+        <div class="flex items-center justify-center space-x-3 py-6">
+            <div class="loading-spinner rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+            <span class="text-gray-700">Calculating your tax summary...</span>
+        </div>
+    `;
 
+    try {
+        const res = await fetch("/api/tax-summary", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: input })
+        });
 
-def parse_income_input(text):
-    text = text.lower().replace(",", "").strip()
-
-    result = {
-        "salary_income": 0,
-        "freelance_income": 0,
-        "crypto_income": 0,
-        "donation": 0,
-        "other_income": 0
+        if (!res.ok) throw new Error(await res.text());
+        
+        const data = await res.json();
+        
+        // Format results with Indian number formatting
+        const formatINR = (num) => new Intl.NumberFormat('en-IN').format(num);
+        
+        resultBox.innerHTML = `
+            <div class="space-y-4">
+                <div class="result-item">
+                    <span class="result-label">Total Income:</span>
+                    <span class="result-value">₹${formatINR(data.total_income)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Deductions:</span>
+                    <span class="result-value">₹${formatINR(data.total_deductions)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Taxable Income:</span>
+                    <span class="result-value">₹${formatINR(data.taxable_income)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Tax Payable:</span>
+                    <span class="result-value tax-payable">₹${formatINR(data.tax_payable)}</span>
+                </div>
+                <div class="pt-4">
+                    <a href="${data.pdf}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                        <i class="fas fa-file-pdf mr-2"></i> Download PDF Summary
+                    </a>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        console.error("Error:", error);
+        resultBox.innerHTML = `
+            <div class="bg-red-50 text-red-600 p-4 rounded-lg">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                Error generating summary: ${error.message}
+            </div>
+        `;
     }
-
-    patterns = {
-        "salary_income": r"(?:₹|rs\.?)\s?(\d+(?:\.\d+)?[kl]?)\s?(?:from)?\s?(?:salary|job|jobs|income)?",
-        "freelance_income": r"(?:₹|rs\.?)\s?(\d+(?:\.\d+)?[kl]?)\s?(?:from)?\s?(?:freelancing|freelancer|side hustle)",
-        "crypto_income": r"(?:₹|rs\.?)\s?(\d+(?:\.\d+)?[kl]?)\s?(?:from)?\s?(?:crypto|bitcoin|ethereum)",
-        "donation": r"(?:₹|rs\.?)\s?(\d+(?:\.\d+)?[kl]?)\s?(?:donated|donation|to charity)"
-    }
-
-    for key, pattern in patterns.items():
-        match = re.search(pattern, text)
-        if match:
-            value = match.group(1)
-            result[key] = parse_amount(value)
-
-    return result
-
-def parse_amount(value):
-    value = value.lower().replace("rs", "").replace("₹", "").strip()
-    if value.endswith('k'):
-        return int(float(value[:-1]) * 1000)
-    elif value.endswith('l'):
-        return int(float(value[:-1]) * 100000)
-    else:
-        return int(float(value))
-
-
-def load_tax_rules(filepath="tax_rules.json"):
-    with open(filepath, "r") as f:
-        return json.load(f)
-
-def apply_deductions(income, deductions, rules):
-    std_ded = rules.get("standard_deduction_old", 0)
-    total_deduction = std_ded
-
-    limit_80C = rules["deductions"]["80C"]["limit"]
-    total_deduction += min(deductions.get("80C", 0), limit_80C)
-
-    donation = deductions.get("donation", 0)
-    total_deduction += donation
-
-    taxable_income = max(income - total_deduction, 0)
-    return taxable_income, total_deduction
-
-def calculate_tax(taxable_income, rules):
-    slabs = rules["slabs_old"]
-    tax = 0
-    prev_limit = 0
-
-    for slab in slabs:
-        limit = slab["limit"]
-        rate = slab["rate"]
-        if taxable_income > limit:
-            tax += (limit - prev_limit) * rate
-            prev_limit = limit
-        else:
-            tax += (taxable_income - prev_limit) * rate
-            break
-
-    return tax
-
-
-
-def generate_tax_summary_pdf(
-    filename,
-    total_income,
-    total_deductions,
-    taxable_income,
-    tax_payable
-):
-    pdf = FPDF()
-    pdf.add_page()
-
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, "Tax Summary Report", ln=True, align="C")
-    pdf.ln(10)
-
-    pdf.set_font("Arial", size=12)
-    pdf.cell(0, 10, f"Total Income: Rs. {total_income:,}", ln=True)
-    pdf.cell(0, 10, f"Total Deductions: Rs. {total_deductions:,}", ln=True)
-    pdf.cell(0, 10, f"Taxable Income: Rs. {taxable_income:,}", ln=True)
-    pdf.cell(0, 10, f"Income Tax Payable: Rs. {tax_payable:,}", ln=True)
-
-    pdf.ln(20)
-    pdf.set_font("Arial", 'I', 10)
-    pdf.cell(0, 10, "Generated by TaxTime - AI Tax Assistant", ln=True, align="C")
-
-    pdf.output(filename)
-    print(f"\n✅ PDF generated: {filename}")
-
-
-
-def main():
-    user_input = input("Describe your income and deductions (e.g. 'I earned ₹10L salary and ₹1L freelancing, donated ₹5K'):\n")
-
-    parsed = parse_income_input(user_input)
-    print("\n🔍 Parsed Values:", parsed)
-
-    total_income = sum([
-        parsed["salary_income"],
-        parsed["freelance_income"],
-        parsed["crypto_income"],
-        parsed["other_income"]
-    ])
-
-    deductions = {
-        "80C": 0,
-        "donation": parsed["donation"]
-    }
-
-    rules = load_tax_rules()
-
-    taxable_income, total_deduction = apply_deductions(total_income, deductions, rules)
-    tax_payable = int(calculate_tax(taxable_income, rules))
-
-    print("\n----- TAX SUMMARY -----")
-    print(f"Total Income: ₹{total_income}")
-    print(f"Total Deductions: ₹{total_deduction}")
-    print(f"Taxable Income: ₹{taxable_income}")
-    print(f"Income Tax Payable: ₹{tax_payable}")
-
-    generate_tax_summary_pdf(
-        filename="Tax_Summary_Report.pdf",
-        total_income=total_income,
-        total_deductions=total_deduction,
-        taxable_income=taxable_income,
-        tax_payable=tax_payable
-    )
-
-if __name__ == "__main__":
-    main()
+});
