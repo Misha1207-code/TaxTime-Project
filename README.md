@@ -10,3 +10,7 @@ TaxTime takes input, interprets, apply Indian tax rules , calculates deductions,
 5. Error & Missing Data Detector
 6. Tax Reminder Agent 
 7. Download Center (All Outputs in One Place)
+
+
+How to use-
+First go to tax summary generator where you give your salary and expenditures as input, taxtime calculates using the given information.
