@@ -1,0 +1,15 @@
+{
+  "standard_deduction": 50000,
+  "cess_rate": 0.04,
+  "deductions": {
+    "80C": 150000,
+    "80D": 25000,
+    "80G": 100000
+  },
+  "slabs_old": [
+    {"limit": 250000, "rate": 0},
+    {"limit": 500000, "rate": 0.05},
+    {"limit": 1000000, "rate": 0.20},
+    {"limit": 999999999, "rate": 0.30}
+  ]
+}
