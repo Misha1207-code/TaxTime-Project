@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loading - TaxTime</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .gradient-text {
+      background: linear-gradient(-45deg, #3B82F6, #10B981, #6366F1);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientFlow 5s ease infinite;
+    }
+    .progress-bar {
+      width: 100%;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+    }
+    .progress {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(to right, #3B82F6, #8B5CF6);
+      transition: width 1s linear;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen overflow-hidden">
+  <div class="text-center">
+    <h1 class="text-5xl md:text-6xl font-bold mb-6 gradient-text">Hi, Welcome to TaxTime</h1>
+    <p class="text-xl text-gray-300 mb-8 animate-pulse">Preparing your tax assistant...</p>
+    
+    <div class="flex justify-center space-x-4 mb-12">
+      <div class="w-12 h-12 bg-blue-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite"></div>
+      <div class="w-8 h-8 bg-green-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite 0.5s"></div>
+      <div class="w-10 h-10 bg-purple-500 rounded-full opacity-70" style="animation: float 3s ease-in-out infinite 1s"></div>
+    </div>
+    
+    <div class="w-full max-w-md mx-auto h-2.5 bg-gray-700 rounded-full">
+      <div id="progressBar" class="h-2.5 rounded-full" style="width: 0%"></div>
+    </div>
+    
+    <p id="countdown" class="mt-4 text-gray-400">Loading in 15 seconds...</p>
+  </div>
+
+  <script>
+    // Progress bar animation
+    let timeLeft = 15;
+    const progressBar = document.getElementById('progressBar');
+    const countdown = document.getElementById('countdown');
+    
+    const timer = setInterval(() => {
+      timeLeft--;
+      const progress = 100 - (timeLeft / 15 * 100);
+      progressBar.style.width = `${progress}%`;
+      countdown.textContent = `Loading in ${timeLeft} seconds...`;
+      
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        window.location.href = "/main"; // Redirect to main page
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
