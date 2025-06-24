@@ -1,14 +1,12 @@
-/* Base Styles */
 body {
     font-family: "Pattanakarn Condensed", sans-serif;
     animation: fadeIn 0.5s ease-out;
 }
 
-/* Textarea Styling */
 #incomeText {
-    color: #1f2937; /* gray-800 */
-    background-color: #f9fafb; /* gray-50 */
-    border: 1px solid #d1d5db; /* gray-300 */
+    color: #1f2937;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
     width: 100%;
     padding: 1rem;
     border-radius: 0.5rem;
@@ -18,11 +16,10 @@ body {
 
 #incomeText:focus {
     outline: none;
-    border-color: #3b82f6; /* blue-500 */
+    border-color: #3b82f6;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
 }
 
-/* Results Styling */
 #result {
     background-color: white;
     border-radius: 0.5rem;
@@ -49,10 +46,9 @@ body {
 }
 
 .tax-payable {
-    color: #dc2626; /* red-600 */
+    color: #dc2626;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
