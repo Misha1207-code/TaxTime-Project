@@ -7,70 +7,316 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="styles.css">
-
   <style>
+    /* Animated Gradient Background */
     .animated-gradient-bg {
       background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533d7b);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
       color: white;
     }
-
+    
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
+    
+    /* Light text for dark background */
     .light-text {
       color: #f8fafc;
     }
-
+    
+    /* Semi-transparent cards */
     .feature-card {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(5px);
     }
-
+    
+    /* Wave divider styling */
     .wave-divider {
       width: 100%;
       height: 80px;
       margin-top: -1px;
       color: #f8fafc;
     }
-
+    
+    /* Floating animation */
     .floating-btn {
       animation: float 3s ease-in-out infinite;
     }
-
+    
     @keyframes float {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
     }
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=3">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Clear session when leaving the site
+      window.addEventListener('beforeunload', function() {
+        fetch('/clear-session', { method: 'POST' });
+      });
+    });
+  </script>
 </head>
 
 <body class="animated-gradient-bg">
   <!-- NAVBAR -->
-  <!-- ... unchanged navbar and sections ... -->
+  <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-300">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-600">TaxTime</h1>
+      <nav class="space-x-6 hidden md:block">
+        <a href="#features" class="hover:text-blue-600 transition light-text">Features</a>
+        <a href="#how" class="hover:text-blue-600 transition light-text">How It Works</a>
+        <a href="#cta" class="hover:text-blue-600 transition light-text">Get Started</a>
+      </nav>
+      <a href="#cta" class="btn-ripple bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        Get Started
+      </a>
+    </div>
+  </header>
 
-  <!-- FORM + RESULT -->
-  <!-- ... unchanged up to form and result ... -->
+  <!-- HERO SECTION -->
+  <section class="pt-32 pb-24 text-center">
+    <div class="container mx-auto px-6" data-aos="fade-up">
+      <h2 class="text-4xl md:text-5xl font-extrabold mb-4 light-text">Your AI-Powered Tax Assistant</h2>
+      <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+        Get tax summaries, fill forms, and download reports — instantly and stress-free.
+      </p>
+      <a href="#cta" class="floating-btn inline-block px-8 py-4 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition">
+        Try TaxTime Now <i class="fas fa-arrow-right ml-2"></i>
+      </a>
+      <div class="mt-16" data-aos="fade-up" data-aos-delay="300">
+        <div class="wave-divider">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
+            <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
+            <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="py-24">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h3 class="text-3xl font-bold mb-4 light-text">What TaxTime Does for You</h3>
+        <p class="text-blue-100 max-w-2xl mx-auto">No jargon. Just smart tax help, built for real people.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div data-aos="fade-up" class="feature-card p-8 border border-white-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-language text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-2">Income Parsing</h4>
+          <p class="text-gray-600">Natural language income entry using spaCy and regex parsing.</p>
+        </div>
+        
+        <!-- Feature 2 -->
+        <div data-aos="fade-up" data-aos-delay="100" class="feature-card p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-calculator text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-3">Tax Calculation</h4>
+          <p class="text-gray-600">Applies Indian tax rules, deductions, and rebates automatically.</p>
+        </div>
+        
+        <!-- Feature 3 -->
+        <div data-aos="fade-up" data-aos-delay="200" class="feature-card p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-file-pdf text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-3">Tax Summary PDF</h4>
+          <p class="text-gray-600">Provides you with Tax Summaries without any extra hassle.</p>
+        </div>
+        
+        <!-- Feature 4 -->
+        <div data-aos="fade-up" class="feature-card p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-file-invoice text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-3">Mock ITR Filler</h4>
+          <p class="text-gray-600">Gives you a mock simulation of ITR Form.</p>
+        </div>
+        
+        <!-- Feature 5 -->
+        <div data-aos="fade-up" data-aos-delay="100" class="feature-card p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-bug text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-3">Error Detector</h4>
+          <p class="text-gray-600">Detects any errors or missing data hassle-free.</p>
+        </div>
+        
+        <!-- Feature 6 -->
+        <div data-aos="fade-up" data-aos-delay="200" class="feature-card p-8 border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition">
+          <i class="fas fa-download text-blue-500 text-4xl mb-4"></i>
+          <h4 class="font-bold text-xl mb-3">Downloader</h4>
+          <p class="text-gray-600">Export tax summaries, reports, and reminders with one click.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" class="py-24 bg-blue-50/30 backdrop-blur-sm">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16" data-aos="fade-up">
+        <h3 class="text-3xl font-bold mb-4 light-text">How It Works</h3>
+        <p class="text-blue-100 max-w-xl mx-auto">Three steps. That's it.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8 text-center">
+        <!-- Step 1 -->
+        <div data-aos="zoom-in" class="feature-card p-8 rounded-xl shadow-sm hover:shadow-md transition">
+          <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-blue-600 text-2xl font-bold">1</span>
+          </div>
+          <h4 class="text-xl font-bold mb-3">Enter Income</h4>
+          <p class="text-gray-600">Describe your income & deductions in plain English.</p>
+        </div>
+        
+        <!-- Step 2 -->
+        <div data-aos="zoom-in" data-aos-delay="100" class="feature-card p-8 rounded-xl shadow-sm hover:shadow-md transition">
+          <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-blue-600 text-2xl font-bold">2</span>
+          </div>
+          <h4 class="text-xl font-bold mb-3">Get Tax Summary</h4>
+          <p class="text-gray-600">Instantly see tax payable, rebates, and savings suggestions.</p>
+        </div>
+        
+        <!-- Step 3 -->
+        <div data-aos="zoom-in" data-aos-delay="200" class="feature-card p-8 rounded-xl shadow-sm hover:shadow-md transition">
+          <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-blue-600 text-2xl font-bold">3</span>
+          </div>
+          <h4 class="text-xl font-bold mb-3">Download Reports</h4>
+          <p class="text-gray-600">PDF summaries, mock ITRs & reminders — all in your dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta" class="py-24 text-center">
+    <div class="container mx-auto px-6" data-aos="fade-up">
+      <h3 class="text-3xl md:text-4xl font-bold mb-4 light-text">Start Filing Smarter with TaxTime</h3>
+      <p class="text-blue-100 mb-8 max-w-xl mx-auto">No installations. No fees. Just powerful tax automation.</p>
+
+      <form id="taxForm" class="max-w-2xl mx-auto bg-black/90 backdrop-blur-sm p-8 rounded-xl shadow-sm">
+        <textarea 
+        id="incomeText"
+        rows="5" 
+        class="w-full p-4 rounded-lg mb-6 text-gray-800 bg-gray-50 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+        placeholder="e.g. I earned ₹10L salary, ₹1L freelancing, donated ₹5K"
+        ></textarea>
+        <button 
+          type="submit" 
+          class="btn-ripple bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition"
+        >
+          <i class="fas fa-calculator mr-2"></i> Generate Summary
+        </button>
+      </form>
+
+      <div id="result" class="mt-8 max-w-2xl mx-auto bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-sm text-left" data-aos="fade-up"></div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
-  <!-- ... unchanged footer ... -->
+  <footer class="py-12 bg-gray-900/50 backdrop-blur-sm text-center">
+    <div class="container mx-auto px-6">
+      <div class="flex justify-center space-x-6 mb-6">
+        <a href="#" class="text-gray-300 hover:text-blue-400 transition">
+          <i class="fab fa-twitter text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-300 hover:text-blue-400 transition">
+          <i class="fab fa-linkedin text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-300 hover:text-blue-400 transition">
+          <i class="fab fa-github text-xl"></i>
+        </a>
+      </div>
+      <p class="text-gray-300">© 2025 TaxTime. All rights reserved.</p>
+    </div>
+  </footer>
 
   <!-- Scripts -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <script src="script.js"></script>
-  <script>
-    AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
 
+  <script>
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true
+    });
+  </script>
+  <script>
+    // Skip loading page if coming from it
     if (document.referrer.includes(window.location.host)) {
       window.history.replaceState(null, null, '?skip_loading=true');
     }
   </script>
-  <script id="omnidimension-web-widget" async src="https://backend.omnidim.io/web_widget.js?secret_key=cacc02a6428207970b05395e2f2d3095"></script>
+  <script id="omnidimension-web-widget" async src="https://backend.omnidim.io/web_widget.js?secret_key=cacc02a6428207970b05395e2f2d3095" ></script>
 </body>
 </html>
+
+
+js
+document.getElementById("taxForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const input = document.getElementById("incomeText").value;
+    const resultBox = document.getElementById("result");
+
+    // Show loading state
+    resultBox.innerHTML = 
+        <div class="flex items-center justify-center space-x-3 py-6">
+            <div class="loading-spinner rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600"></div>
+            <span class="text-gray-700">Calculating your tax summary...</span>
+        </div>
+    ;
+
+    try {
+        const res = await fetch("/api/tax-summary", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: input })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+        
+        const data = await res.json();
+        
+        // Format results with Indian number formatting
+        const formatINR = (num) => new Intl.NumberFormat('en-IN').format(num);
+        
+        resultBox.innerHTML = 
+            <div class="space-y-4">
+                <div class="result-item">
+                    <span class="result-label">Total Income:</span>
+                    <span class="result-value">₹${formatINR(data.total_income)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Deductions:</span>
+                    <span class="result-value">₹${formatINR(data.total_deductions)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Taxable Income:</span>
+                    <span class="result-value">₹${formatINR(data.taxable_income)}</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Tax Payable:</span>
+                    <span class="result-value tax-payable">₹${formatINR(data.tax_payable)}</span>
+                </div>
+                <div class="pt-4">
+                    <a href="${data.pdf}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition">
+                        <i class="fas fa-file-pdf mr-2"></i> Download PDF Summary
+                    </a>
+                </div>
+            </div>
+        ;
+    } catch (error) {
+        console.error("Error:", error);
+        resultBox.innerHTML = 
+            <div class="bg-red-50 text-red-600 p-4 rounded-lg">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                Error generating summary: ${error.message}
+            </div>
+        ;
+    }
+});
